@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             }else if (!preg_match($regexpUsername, $user)){
                 $app->failed("Username must be a email direction.");
             }else{
-                if ($app->getDao()->registerUser($user, $password, $name, $surname)){
+                if ($app->getDao()->registerUser($user, hash('sha256', $_POST['password']), $name, $surname)){
                     $app->showSignIn();
                 }else{
                     $app->failed("Unable to register the user.");

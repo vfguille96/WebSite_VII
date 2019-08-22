@@ -3,7 +3,7 @@ include_once 'app.php';
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $user = $_POST['user'];
-    $password = $_POST['password'];
+    $password = hash('sha256', $_POST['password']);
     if (empty($user)) {
         echo "<p>Username is empty.</p>";
     } else if (empty($password)) {
