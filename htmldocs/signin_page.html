@@ -6,7 +6,7 @@
     <title>SignIn</title>
 </head>
 <body>
-    <form method="post" action="../php/signin.php" onsubmit="checkFormSignIn();">
+    <form method="post" action="../php/signin.php" id="formSU">
         <fieldset>
             <legend>Sign In</legend>
         <div>
@@ -18,5 +18,32 @@
             <button type="submit">Sign In</button>
             </fieldset>
     </form>
+    <script type="text/javascript">
+        var regexpSQLInjection = '/[\\t\\r\\n]|(--[^\\r\\n]*)|(\\/\\*[\\w\\W]*?(?=\\*)\\*\\/)/gi';
+
+        String.prototype.hashCode = function () {
+            var hash = 0;
+            if (this.length === 0) {
+                return hash;
+            }
+            for (var i = 0; i < this.length; i++) {
+                var char = this.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+            return hash;
+        };
+
+        function checkUsername() {
+            var username = document.getElementById('inputUser');
+            return !username.value.matches(regexpSQLInjection);
+        }
+
+        document.getElementById('formSU').onsubmit = function () {
+            var txt = document.getElementById('inputPassword');
+            txt.value = txt.value.hashCode();
+            return this.checkUsername();
+        };
+    </script>
 </body>
 </html>

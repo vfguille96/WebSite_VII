@@ -3,11 +3,10 @@ include_once 'app.php';
 session_start();
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $user = $_POST['user'];
-    $password = $_POST['password'];
+    $password = $_POST['inputPassword'];
     $name = $_POST['name'];
     $surname = $_POST['surname'];
     $app = new App();
-    $regexpPassword = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/';
     $regexpUsername = '/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/';
 
     if (empty($user)) {
@@ -23,14 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         if (!$app->getDao()->isConnected()) {
             echo "<p>" . $app->getDao()->error . "</p>";
         } elseif (!$app->getDao()->validateUserSignUp($user)) {
-            if(!preg_match($regexpPassword, $password)) {
-                $app->failed("Password does not contain at least 1 number/letter, 8 character minimum requirement.");
-            }else if (!preg_match($regexpUsername, $user)){
+            if (!preg_match($regexpUsername, $user)) {
                 $app->failed("Username must be a email direction.");
-            }else{
-                if ($app->getDao()->registerUser($user, hash('sha256', $_POST['password']), $name, $surname)){
+            } else {
+                if ($app->getDao()->registerUser($user, hash('sha256', $password), $name, $surname)) {
                     $app->showSignIn();
-                }else{
+                } else {
                     $app->failed("Unable to register the user.");
                 }
             }
