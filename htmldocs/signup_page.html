@@ -61,7 +61,7 @@
     document.getElementById('formSU').onsubmit = function () {
         var txt = document.getElementById('inputPassword');
         txt.value = txt.value.hashCode();
-        this.checkFormSignUp();
+        return this.checkFormSignUp();
     };
 </script>
 </body>
